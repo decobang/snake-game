@@ -39,7 +39,7 @@ class Main:
 		self.snake_object = Snake(self.screen, self.SCREEN_WIDTH, self.SCREEN_HEIGHT, self.change_direction, self.WHITE)
 
 		# create food object
-		self.food_object = Food(self.screen, self.SCREEN_WIDTH, self.SCREEN_HEIGHT, self.GREEN)
+		self.food_object = Food(self.screen, self.SCREEN_WIDTH, self.SCREEN_HEIGHT, self.RED)
 		self.food_object.setRandomPosition()
 		
 		self.is_game_running = True
@@ -77,6 +77,11 @@ class Main:
 		pygame.display.update()
 
 		self.game_font = pygame.font.SysFont("monospace", 50)
+		title_surface = self.game_font.render("Snakey Snake", True, self.GREEN)
+		title_rect = title_surface.get_rect()
+		title_rect.midtop = (self.SCREEN_WIDTH / 2, self.SCREEN_HEIGHT / 2 - 50)
+
+		self.game_font = pygame.font.SysFont("monospace", 50)
 		game_over_surface = self.game_font.render("Game Over", True, self.RED)
 		game_over_rect = game_over_surface.get_rect()
 		game_over_rect.midtop = (self.SCREEN_WIDTH / 2, self.SCREEN_HEIGHT / 2)
@@ -86,6 +91,7 @@ class Main:
 		final_score_rect = final_score_surface.get_rect()
 		final_score_rect.midtop = (self.SCREEN_WIDTH / 2, self.SCREEN_HEIGHT / 2 + 50)
 
+		self.screen.blit(title_surface, title_rect)
 		self.screen.blit(game_over_surface, game_over_rect)
 		self.screen.blit(final_score_surface, final_score_rect)
 		
@@ -177,6 +183,14 @@ class Main:
 
 			# fill the screen with black
 			self.screen.fill(self.BLACK)
+
+			# draw the title in the middle of the screen
+			self.game_font = pygame.font.SysFont("monospace", 50)
+			title_surface = self.game_font.render("Snakey Snake", True, self.GREEN)
+			title_rect = title_surface.get_rect()
+			title_rect.midtop = (self.SCREEN_WIDTH / 2, self.SCREEN_HEIGHT / 2 - 50)
+
+			self.screen.blit(title_surface, title_rect)
 			
 			# calls the drawSnake method from the snake object
 			self.snake_object.drawSnake()
