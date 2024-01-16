@@ -1,10 +1,12 @@
+# Author: David Coggin
+
+# import the required modules
 import math
 import pygame
 import time
 import random
-from food_object import Food
-
-from snake_object import Snake
+from food_object import Food 
+from snake_object import Snake 
 
 class Main:
 	def __init__(self):
@@ -21,36 +23,33 @@ class Main:
 		self.GREEN = (0, 255, 0)
 		self.BLUE = (0, 0, 255)
 
-		# initialize pygame
+		# initialize pygame and creates the game window
 		pygame.init()
-
-		# set the window title
 		pygame.display.set_caption("Snakey Snake")
-
-		# create the screen and set width and height
 		self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
 		
 		self.fps = pygame.time.Clock()
 
-		self.snake_direction = "RIGHT"
+		self.snake_direction = "RIGHT" # initial direction of the snake
 		self.change_direction = self.snake_direction
 				
-		# create snake object
+		# create snake object and pass the required parameters
 		self.snake_object = Snake(self.screen, self.SCREEN_WIDTH, self.SCREEN_HEIGHT, self.change_direction, self.WHITE)
 
-		# create food object
+		# create food object and pass the required parameters
 		self.food_object = Food(self.screen, self.SCREEN_WIDTH, self.SCREEN_HEIGHT, self.RED)
-		self.food_object.setRandomPosition()
+		self.food_object.setRandomPosition() 
 		
-		self.is_game_running = True
-		self.is_game_over = False
+		self.is_game_running = True # checks if the game is running
+		self.is_game_over = False # checks if the game is over when snake hits the wall or itself
 
-		self.playerScore = 0
+		self.playerScore = 0 # keeps track of the player score
+
 		self.game_font = "monospace"
 
-	def resetScreen(self):
 
-		print("Resetting screen")
+	# reset the screen when the game is over and reset all the variables
+	def resetScreen(self):
 
 		self.snake_direction = "RIGHT"
 		self.change_direction = self.snake_direction
@@ -67,35 +66,41 @@ class Main:
 
 		self.startGame()
 
+	# show game over screen
 	def gamerOver(self, _final_score):
 		self.is_game_running = False
 		self.final_score = _final_score
 
-		time.sleep(1)
+		time.sleep(1) # wait for 1 second before showing the game over screen
 
 		self.screen.fill(self.BLACK)
-		pygame.display.update()
+		pygame.display.update() # update the screen
 
+		# creates the title on the screen
 		self.game_font = pygame.font.SysFont("monospace", 50)
 		title_surface = self.game_font.render("Snakey Snake", True, self.GREEN)
 		title_rect = title_surface.get_rect()
 		title_rect.midtop = (self.SCREEN_WIDTH / 2, self.SCREEN_HEIGHT / 2 - 50)
 
+		# creates the game over text in the middle of the screen
 		self.game_font = pygame.font.SysFont("monospace", 50)
 		game_over_surface = self.game_font.render("Game Over", True, self.RED)
 		game_over_rect = game_over_surface.get_rect()
 		game_over_rect.midtop = (self.SCREEN_WIDTH / 2, self.SCREEN_HEIGHT / 2)
 
+		# create the final score on the screen
 		self.final_score_font = pygame.font.SysFont("monospace", 30)
 		final_score_surface = self.final_score_font.render("Final Score: {0}".format(self.final_score), True, self.WHITE)
 		final_score_rect = final_score_surface.get_rect()
 		final_score_rect.midtop = (self.SCREEN_WIDTH / 2, self.SCREEN_HEIGHT / 2 + 50)
 
+
+		# display the text on the screen
 		self.screen.blit(title_surface, title_rect)
 		self.screen.blit(game_over_surface, game_over_rect)
 		self.screen.blit(final_score_surface, final_score_rect)
 		
-		pygame.display.update()
+		pygame.display.update() 
 
 		print("Game Over")
 
@@ -103,6 +108,7 @@ class Main:
 
 		self.resetScreen()
 
+	# show the player's score on the screen
 	def showScore(self, _score, _size):
 		score_font = pygame.font.SysFont("monospace", _size)
 		score_surface = score_font.render("Score: {0}".format(_score), True, self.WHITE)
@@ -111,14 +117,14 @@ class Main:
 
 		self.screen.blit(score_surface, score_rect)
 
-	# draw the grid
+	# draw a grid on the screen for debugging purposes or as a feature to make game play easier
 	def drawGrid(self):
 		for x in range(0, self.SCREEN_WIDTH, self.GRID_SIZE):
 			pygame.draw.line(self.screen, self.WHITE, (x, 0), (x, self.SCREEN_HEIGHT))
 		for y in range(0, self.SCREEN_HEIGHT, self.GRID_SIZE):
 			pygame.draw.line(self.screen, self.WHITE, (0, y), (self.SCREEN_WIDTH, y))
 
-	# handle events
+	# handle events such as key presses and mouse clicks 
 	def eventHandler(self):
 		for event in pygame.event.get():
 
@@ -149,9 +155,10 @@ class Main:
 		if self.change_direction == "RIGHT" and self.snake_direction != "LEFT":
 			self.snake_direction = "RIGHT"
 
+	# checks if the snake and food collided (if the snake ate the food)
 	def checkSnakeAndFoodCollision(self, _snake_position, _food_position):
 		
-		self.snake_object.snake_body.insert(0, list(_snake_position))
+		self.snake_object.snake_body.insert(0, list(_snake_position)) # insert the snake's head position to the snake's body list
 
 		if _snake_position[0] == _food_position[0] and _snake_position[1] == _food_position[1]:
 			self.food_object.food_spawn = False
@@ -165,13 +172,11 @@ class Main:
 		self.food_object.food_spawn = True
 			
 
-	# main loop
+	# main loop of the game
 	def startGame(self):
 
-		print("Starting game")
-
-		self.screen.fill(self.BLACK)
-		pygame.display.update()
+		self.screen.fill(self.BLACK) # fill the screen with black
+		pygame.display.update() # update the screen
 
 		# loop will run until is_game_running is False
 		while self.is_game_running == True:
@@ -181,7 +186,6 @@ class Main:
 			# call event handler
 			self.eventHandler()
 
-			# fill the screen with black
 			self.screen.fill(self.BLACK)
 
 			# draw the title in the middle of the screen
@@ -198,11 +202,13 @@ class Main:
 			# calls the moveSnake method from the snake object
 			self.snake_object.moveSnake(self.snake_direction)
 			
-			
+
 			self.checkSnakeAndFoodCollision(self.snake_object.snake_position, self.food_object.food_position)
 
-			self.food_object.drawFood()
+			self.food_object.drawFood() # calls the drawFood method from the food object
+
 			self.showScore(self.playerScore, 20)
+
 			# update the whole screen
 			pygame.display.update()
 
